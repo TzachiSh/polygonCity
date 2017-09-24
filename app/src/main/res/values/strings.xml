@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Polygon</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="flickerApiKey">b7fc60940a29a534a4bdd00824da3c19</string>
+    <string name="googleMapApiKey">AIzaSyBIFVn0lrHA1uoZafChF_vKWn6iMQm7yTk</string>
+</resources>
