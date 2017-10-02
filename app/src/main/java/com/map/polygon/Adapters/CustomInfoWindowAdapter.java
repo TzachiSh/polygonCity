@@ -69,7 +69,7 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
                 // calculate the distance the polygon from the mark and show in the UI
                 double shortDistance = polygonCalc.shortestDistance();
                 NumberFormat formatter = new DecimalFormat("distance: #0.00 Km");
-                String minDistance = formatter.format(shortDistance * 100);
+                String minDistance = formatter.format(shortDistance);
                 tvDistance.setText("" + minDistance);
                 }
 

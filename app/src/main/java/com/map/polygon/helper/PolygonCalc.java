@@ -1,9 +1,8 @@
 package com.map.polygon.helper;
 
-import com.google.android.gms.maps.model.LatLng;
+import android.util.Log;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 
 /**
@@ -18,6 +17,7 @@ public class PolygonCalc {
         this.polygon = polygon;
         this.point = point;
     }
+
     public boolean pointInPolygon() {
 
         double x = point.longitude, y = point.latitude;
@@ -34,9 +34,9 @@ public class PolygonCalc {
         }
 
         return inside;
-        }
-    public double shortestDistance()
-    {
+    }
+
+    public double shortestDistance() {
         double min = 0;
         double temp;
 
@@ -51,32 +51,56 @@ public class PolygonCalc {
 
             if (temp < min) min = temp;
         }
-        return  min;
+
+        return min;
+
+
 
 
     }
-    private double distanceToLine(double x1,double y1,double x2,double y2,double x3,double y3){
+
+    private double distanceToLine(double x1, double y1, double x2, double y2, double x3, double y3) {
         // Return minimum distance between line SEGMENTS (x1,y1)(x2,y2) and point (x3,y3)
-        double lineX = x2 - x1;
-        double lineY = y2 - y1;
-        double slope = (lineX * lineX) + (lineY * lineY);
-        double u = ((x3 - x1) * lineX + (y3 - y1) * lineY) / (slope);
+
+        double dLineX = x2 - x1;
+        double dLineY = y2 - y1;
+        double temp = (dLineX * dLineX) + (dLineY * dLineY);
+        double u = ((x3 - x1) * dLineX + (y3 - y1) * dLineY) / (temp);
 
         //if this is > 0 then its outside the line segment
-        u = (u>1) ?  1 : 0 ;
 
-        double x = x1 + u * lineX;
-        double y = y1 + u * lineY;
+        if (u <= 0.0) {
 
-        double dx = x - x3;
-        double dy = y - y3;
-        double distance = Math.sqrt(dx*dx + dy*dy);
-        return distance;
+            return circleDistanceTwoPoints(y3,x3, y1, x1);
 
+        } else if (u >= 1.0) {
+            return circleDistanceTwoPoints(y3,x3, y2, x2);
+
+        } else {
+
+            double x = u * dLineX;
+            double y = u * dLineY;
+
+            double dx = x3 - x1;
+            double dy = y3 - y1;
+            return circleDistanceTwoPoints(dy,dx,y,x);
+
+        }
     }
 
+    private double circleDistanceTwoPoints(double lat1, double lng1, double lat2, double lng2) {
+        double earthRadius = 6371.0;
 
+        double a = 0.5 - Math.cos(toRadian(lat2 - lat1))/2 +
+                Math.cos(toRadian(lat1)) *  Math.cos(toRadian(lat2)) *
+                        (1 -  Math.cos(toRadian(lng2 - lng1)))/2;
 
-  }
+        return (earthRadius * 2.0) * Math.asin(Math.sqrt(a)); // distance in Km
 
+    }
+    private  double toRadian(double x) {
+        return  x * 0.017453292519943295;    // Math.PI / 180
+    }
+
+}
 
